@@ -20,28 +20,16 @@ class Aquatic:
 
     def pupil(self, x, y, g):
         # normal
-        if not random(1) > .85:
-            s = g/4 + random(g/3)
-            fill(self.r*2.0, self.g, self.b, self.a/2.0)
-            stroke(self.r, self.g/2, self.b,.6)
-            strokeWeight(2.0)
-            ran = random(s/2, -s/2)
-            ellipse(x, y, s*2, s*2)
-            fill(1)
-            strokeWeight(5.0)
-            stroke(0)
-            ellipse(x-s/4+ran, y-s/4+ran, s/2, s/2)
-        # spiral
-        else:
-            l = random(1)
-            fill(0)
-            stroke(self.r, self.g/2, self.b, 1.0)
-            strokeWeight(0.5)
-            
-            for i in range(100):
-                v = x+i/5.0 * sin(i*l)
-                w = y+i/5.0 * cos(i*l)
-                ellipse(v, w, 2, 2)
+        s = g/4 + random(g/3)
+        fill(self.r*2.0, self.g, self.b, self.a/2.0)
+        stroke(self.r, self.g/2, self.b,.6)
+        strokeWeight(2.0)
+        ran = random(s/2, -s/2)
+        ellipse(x, y, s*2, s*2)
+        fill(1)
+        strokeWeight(5.0)
+        stroke(0)
+        ellipse(x-s/4+ran, y-s/4+ran, s/2, s/2)
 
     def shield(self, x, y, g):
         seg = ellipse(x-g, y-g, g*2, g*2, draw = False)
@@ -56,13 +44,18 @@ class Aquatic:
 
     def drawEyes(self, eyex, eyey, eyesize):
 
-        if random(1) > 0.5:
+        if random(1) > 0.3:
             stroke(self.r/2, self.g/2, self.b/2, 255)
             strokeWeight(3.0)
         
-            for eyelash in range( 2, int(random(10)) ):
-                lashx = random(-eyesize*1.5, eyesize*1.5)
-                lashy = random(-eyesize*1.5, eyesize/2)
+            for eyelash in range( int(random(7)) ):
+
+                if random(1) > 0.5:
+                    lashx = random(-eyesize*2, -eyesize)
+                else:
+                    lashx = random(eyesize, eyesize*2)
+
+                lashy = random(-eyesize*2, eyesize/2)
                 line(eyex, eyey, eyex+lashx, eyey+lashy)
 
         fill(255)
@@ -132,21 +125,23 @@ class Aquatic:
         translate(-self.x, -self.y)
 
         # eye locations
-        for i in range( 2+int(random(6)) ):
-            eyex = self.x + random(-self.s, self.s)
-            eyey = self.y + random(-self.s/2)
-            g = 5+random(self.s/5.0)
+        eyex = self.x - self.s
+
+        for i in range( 3+int(random(10)) ):
             
-            tup = (eyex, eyey, g)
-            self.eyelist.append(tup)
+            if eyex < self.x + self.s - self.s/3:
+                eyex = eyex + random(-10, 10)
+                eyey = self.y + random(-self.s/2)
+                eyex += random(30, 50)
+
+                g = 5+random(self.s/5.0)
+                
+                tup = (eyex, eyey, g)
+                self.eyelist.append(tup)
         
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
-            '''
-            if header.p.contains(xx, yy):
-                tup = xx, yy, g
-                self.eyelist.append(tup)
-            '''
+        
         mouth = []
         '''
         for p in l:
