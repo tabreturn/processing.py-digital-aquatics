@@ -35,7 +35,7 @@ class Aquatic:
         ellipse(x, y, s/2, s/2)
     
     def drawEyeLid(self, x, y, size):
-        fill(self.f)
+        fill(self.r, self.g, self.b, random(200,240))
         stroke(self.r/2, self.g/2, self.b/2)
         strokeWeight(1)
         arc(x, y, size*2, size*2, PI, TWO_PI, CHORD);
@@ -72,31 +72,46 @@ class Aquatic:
         return path
     '''
 
-    def superShapeVertices(self, m, n1, n2, n3, a, b, radius, start, stop, 
-                           xoff=0, yoff=0, xdistort=1, cw=True):
+    def drawHair(self, hairx, hairy, hairlength, angle):
+        noFill()
+        stroke(self.r/2, self.g/2, self.b/2, 140) 
+        strokeWeight(1.6)
+        tipx = cos(angle) * self.r
+        tipy = sin(angle) * self.r
+        curve(hairx-random(-100,100), hairy+random(-100,100), 
+              hairx, hairy, 
+              tipx, tipy, 
+              tipx-random(-100,100), tipy+random(-100,100))
+
+    def superShape(self, m, n1, n2, n3, a, b, radius, start, stop, 
+                   xoff=0, yoff=0, xdistort=1, cw=True, drawhairs=False):
         
-        def superShapeVertex(theta):
-            t1 = pow( abs( (1.0/a) * cos(theta*m/4) ), n2 )
-            t2 = pow( abs( (1.0/b) * sin(theta*m/4) ), n3 )
+        def superShapeVertex(angle):
+            t1 = pow( abs( (1.0/a) * cos(angle*m/4) ), n2 )
+            t2 = pow( abs( (1.0/b) * sin(angle*m/4) ), n3 )
             t3 = pow(t1+t2, 1.0/n1)
-            x = (t3 * cos(theta) * xdistort * radius) + xoff
-            y = (t3 * sin(theta) * radius) + yoff
-            vertex(x,y)
+            x = (t3 * cos(angle) * xdistort * radius) + xoff
+            y = (t3 * sin(angle) * radius) + yoff
+            return [x,y]
 
         # plot supershape clock/counter-clockwise
+        # drawing hairs only works on clockwise
+        angle = start
         if cw:
-            theta = start
-            while theta < stop:
-                superShapeVertex(theta)
-                theta += 0.1
+            while angle < stop:
+                xy = superShapeVertex(angle)
+                if not drawhairs:
+                    vertex(xy[0],xy[1])
+                else:
+                    self.drawHair(xy[0],xy[1], radius/random(1,1.2), angle)
+                angle += 0.1
         else:
-            theta = start
-            while theta > stop:
-                superShapeVertex(theta)
-                theta -= 0.1
+            while angle > stop:
+                xy = superShapeVertex(angle)
+                vertex(xy[0],xy[1])
+                angle -= 0.1
 
     def drawAquatic(self):
-
         # outline/mouth variables
         m = int( random(1,30) )
         if random(1) > 0.5:
@@ -107,37 +122,37 @@ class Aquatic:
         n3 = 0.5+random(0.5,-1.5)
 
         # outline/mouth properties
+        
+        rot = random(HALF_PI-0.2, HALF_PI+0.2)
+
+        # supershapes
+        translate(self.x,self.y); rotate(rot)
+        #hairs
+        a = random(0.7,1.2)
+        b = 1
+        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, drawhairs=True)
+        # body
         fill(self.f)
         stroke(self.r/2, self.g/2, self.b/2) 
         strokeWeight(self.s/22.5)
-        r = random(HALF_PI-0.2, HALF_PI+0.2)
-
-        # supershapes
-        translate(self.x, self.y); rotate(r)
-        # body
         beginShape()
-        a = random(0.7, 1.2)
-        b = 1
-        self.superShapeVertices(m, n1, n2, n3, a, b, self.s, 
-                                0.5, TWO_PI-0.5)
+        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5)
         #mouth
         m = 4+random(20)
         n3 = 0.81+random(-0.8,0.8)
-        a = random(0.9, 1.1)
-        b = random(0.9, 1.1)
+        a = random(0.9,1.1)
+        b = random(0.9,1.1)
         radius = self.s*random(0.2,0.4)
         xoff = self.s/(random(0.9,1.1))
-        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
-                                PI+HALF_PI, HALF_PI, 
-                                xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
+                        xoff=xoff, xdistort=1.5, cw=False)
         endShape(CLOSE)
         # lips
         noFill()
         strokeWeight(self.s/12.0)
         beginShape()
-        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
-                                PI+HALF_PI, HALF_PI, 
-                                xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
+                        xoff=xoff, xdistort=1.5, cw=False)
         endShape()
         stroke((self.r+self.g)*0.8,
                (self.g+self.b)*0.8,
@@ -145,21 +160,20 @@ class Aquatic:
                128)
         strokeWeight(self.s/22.5)
         beginShape()
-        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
-                                PI+HALF_PI, HALF_PI, 
-                                xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
+                        xoff=xoff, xdistort=1.5, cw=False)
         endShape()
-        rotate(-r); translate(-self.x, -self.y)
+        rotate(-rot); translate(-self.x,-self.y)
 
         # eye locations
-        eyex = self.x - self.s
+        eyex = self.x-self.s-random(self.s/10)
 
         for i in range( 3+int(random(10)) ):
             
-            if eyex < self.x + self.s - self.s/2:
-                eyex = eyex + random(-10, 10)
-                eyex += random(30, 50)
-                eyey = self.y + random(-self.s/2)
+            if eyex < self.x+self.s-self.s/2:
+                eyex = eyex+random(-10,10)
+                eyex += random(30,50)
+                eyey = self.y+random(-self.s/2)
                 eyesize = 5+random(self.s/5.0)
                 
                 tup = (eyex, eyey, eyesize)
@@ -167,7 +181,22 @@ class Aquatic:
         
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
-        
+
+
+
+            '''
+            nofill()
+            x = p.x-self.x
+            y = p.y-self.y
+            lx = random(x)
+            ly = random(y)
+            m = random(30)
+            stroke(self.c);strokewidth(1.0)
+            beginpath(p.x,p.y)
+            curveto(p.x+random(m),p.y+random(m),p.x-random(m),p.y-random(m),
+                    p.x+random(lx),p.y+random(ly))
+            endpath()
+            '''
 
         '''
         self.geefpad()
@@ -178,6 +207,9 @@ class Aquatic:
 
 size(500,500)
 background('#D7E1FA')
-fillcolor = color(random(255), random(255), random(255))
+fillcolor = color(random(255), 
+                  random(255), 
+                  random(255),
+                  random(128,230))
 aquatic = Aquatic(width/2, height/2, 100, fillcolor)
 aquatic.drawAquatic()
