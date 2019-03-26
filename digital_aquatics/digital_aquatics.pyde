@@ -5,6 +5,7 @@
 class Aquatic:
 
     def __init__(self, x ,y, size, fillcolor):
+        # main variables
         self.x = x
         self.y = y
         self.s = size
@@ -18,51 +19,52 @@ class Aquatic:
         #self.backpadintern = []
         #self.backpadextern = []
 
-    def pupil(self, x, y, g):
-        # normal
-        s = g/4 + random(g/3)
-        fill(self.r*2.0, self.g, self.b, self.a/2.0)
-        stroke(self.r, self.g/2, self.b,.6)
-        strokeWeight(2.0)
-        ran = random(s/2, -s/2)
-        ellipse(x, y, s*2, s*2)
-        fill(1)
-        strokeWeight(5.0)
-        stroke(0)
-        ellipse(x-s/4+ran, y-s/4+ran, s/2, s/2)
+    def drawIrisPupil(self, x, y, size):
+        s = size/4 + random(size/3)
 
-    def shield(self, x, y, g):
-        seg = ellipse(x-g, y-g, g*2, g*2, draw = False)
-        pad = rect(x-g,y-random(10.0,-4.0),g*2,g*2,draw = False)
-        pc = pad
-        pad = pad.union(seg)
-        pad = pad.difference(pc,False)
-        fill(self.r,self.g,self.b,1.0)
-        stroke(0);strokewidth(1.0)
-        drawpath(pad)
-        return(pad)
+        # iris
+        fill(self.r*2, self.g, self.b, self.a/2)
+        stroke(self.r, self.g/2, self.b, 140)
+        strokeWeight(2)
+        ellipse(x, y, s*2, s*2)
+
+        # pupil
+        fill(1)
+        stroke(0)
+        strokeWeight(5)
+        ellipse(x, y, s/2, s/2)
+    
+    def drawEyeLid(self, x, y, size):
+        fill(self.f)
+        stroke(self.r/2, self.g/2, self.b/2)
+        strokeWeight(1)
+        arc(x, y, size*2, size*2, PI, TWO_PI, CHORD);
 
     def drawEyes(self, eyex, eyey, eyesize):
+        stroke(self.r/2, self.g/2, self.b/2)
 
+        # eyelashes
         if random(1) > 0.3:
-            stroke(self.r/2, self.g/2, self.b/2, 255)
-            strokeWeight(3.0)
+            strokeWeight(3)
         
-            for eyelash in range( int(random(7)) ):
+            for eyelash in range( int(random(8)) ):
 
                 if random(1) > 0.5:
-                    lashx = random(-eyesize*2, -eyesize)
+                    lashx = random(-eyesize*1.5, 0)
                 else:
-                    lashx = random(eyesize, eyesize*2)
+                    lashx = random( eyesize*1.5, 0)
 
                 lashy = random(-eyesize*2, eyesize/2)
                 line(eyex, eyey, eyex+lashx, eyey+lashy)
 
+        # eye
         fill(255)
-        stroke(0)
         strokeWeight(2)
         ellipse(eyex, eyey, eyesize*2, eyesize*2)
-        self.pupil(eyex, eyey, eyesize)
+        self.drawIrisPupil(eyex, eyey, eyesize)
+        # eyelid
+        if random(1) > 0.5:
+            cover = self.drawEyeLid(eyex, eyey, eyesize)
     
     '''
     def linedash(self, path, segment, gap):
@@ -70,8 +72,8 @@ class Aquatic:
         return path
     '''
 
-    def superShape(self, m, n1, n2, n3, a, b, radius, start, stop, 
-                   xoff=0, yoff=0, xdistort=1, cw=True):
+    def superShapeVertices(self, m, n1, n2, n3, a, b, radius, start, stop, 
+                           xoff=0, yoff=0, xdistort=1, cw=True):
         
         def superShapeVertex(theta):
             t1 = pow( abs( (1.0/a) * cos(theta*m/4) ), n2 )
@@ -80,7 +82,8 @@ class Aquatic:
             x = (t3 * cos(theta) * xdistort * radius) + xoff
             y = (t3 * sin(theta) * radius) + yoff
             vertex(x,y)
-        
+
+        # plot supershape clock/counter-clockwise
         if cw:
             theta = start
             while theta < stop:
@@ -92,84 +95,80 @@ class Aquatic:
                 superShapeVertex(theta)
                 theta -= 0.1
 
-    def draw(self):
-        
-        # outline and mouth
-        m = int(random(1,30))
+    def drawAquatic(self):
+
+        # outline/mouth variables
+        m = int( random(1,30) )
         if random(1) > 0.5:
-            n1 = -.8-random(5.0)
+            n1 = -0.8-random(5)
         else:
-            n1 = .8+random(5.0)
-        n2 = .5+random(5.0)
-        n3 = .5+random(.5,-1.5)
+            n1 =  0.8+random(5)
+        n2 = 0.5+random(5)
+        n3 = 0.5+random(0.5,-1.5)
+
+        # outline/mouth properties
         fill(self.f)
         stroke(self.r/2, self.g/2, self.b/2) 
-        strokeWeight(self.s/20)
+        strokeWeight(self.s/22.5)
+        r = random(HALF_PI-0.2, HALF_PI+0.2)
 
-        rotate(HALF_PI)
-        translate(self.x, -self.y)
-
+        # supershapes
+        translate(self.x, self.y); rotate(r)
+        # body
         beginShape()
-        a = random(0.7, 1.2); b = 1
-        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5)
-        a = random(0.9, 1.1); b = random(0.9, 1.1)
-        radius = self.s*random(0.2,0.5)
+        a = random(0.7, 1.2)
+        b = 1
+        self.superShapeVertices(m, n1, n2, n3, a, b, self.s, 
+                                0.5, TWO_PI-0.5)
+        #mouth
         m = 4+random(20)
         n3 = 0.81+random(-0.8,0.8)
-        xoff = self.s/(random(1, 1.5))
-        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
-                        xoff=xoff, xdistort=1.5, cw=False)
+        a = random(0.9, 1.1)
+        b = random(0.9, 1.1)
+        radius = self.s*random(0.2,0.4)
+        xoff = self.s/(random(0.9,1.1))
+        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
+                                PI+HALF_PI, HALF_PI, 
+                                xoff=xoff, xdistort=1.5, cw=False)
         endShape(CLOSE)
-
-        rotate(-HALF_PI)
-        translate(-self.x, -self.y)
+        # lips
+        noFill()
+        strokeWeight(self.s/12.0)
+        beginShape()
+        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
+                                PI+HALF_PI, HALF_PI, 
+                                xoff=xoff, xdistort=1.5, cw=False)
+        endShape()
+        stroke((self.r+self.g)*0.8,
+               (self.g+self.b)*0.8,
+               (self.b+self.r)*0.8,
+               128)
+        strokeWeight(self.s/22.5)
+        beginShape()
+        self.superShapeVertices(m, 0.98, 3.0, n3, a, b, radius, 
+                                PI+HALF_PI, HALF_PI, 
+                                xoff=xoff, xdistort=1.5, cw=False)
+        endShape()
+        rotate(-r); translate(-self.x, -self.y)
 
         # eye locations
         eyex = self.x - self.s
 
         for i in range( 3+int(random(10)) ):
             
-            if eyex < self.x + self.s - self.s/3:
+            if eyex < self.x + self.s - self.s/2:
                 eyex = eyex + random(-10, 10)
-                eyey = self.y + random(-self.s/2)
                 eyex += random(30, 50)
-
-                g = 5+random(self.s/5.0)
+                eyey = self.y + random(-self.s/2)
+                eyesize = 5+random(self.s/5.0)
                 
-                tup = (eyex, eyey, g)
+                tup = (eyex, eyey, eyesize)
                 self.eyelist.append(tup)
         
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
         
-        mouth = []
-        '''
-        for p in l:
-            if self.p.contains(p.x,p.y):
-                loc = p.x,p.y
-                mouth.append(loc)
-                if random() < .01 and p.y < (self.s*4.8):
-                    fill(1);strokewidth(5)
-                    k = (-45,0,45)
-                    # teeth __ not to pleased about them
-                    stroke(self.r/2,self.g/2,self.b/2,1.0)
-                    si = 10+random(self.s*.1)
-                    if not p.x < self.x:
-                        skew(choice(k))
-                        rect(p.x+si/2,p.y,-si,-si)
-                        reset()
-                    else:
-                        skew(choice(k))
-                        rect(p.x-si/2,p.y,si,si)
-                        reset()
-        '''
-        #drawpath(self.p)
-        # lips
-        for o in mouth:
-            s = 1.5
-            fill( (self.r+self.g)*0.8, (self.g+self.b)*0.8, (self.b+self.r)*0.8, 0.5 )
-            noStroke()
-            ellipse(o[0]-s, o[1]-s, s*2, s*2)
+
         '''
         self.geefpad()
         
@@ -181,4 +180,4 @@ size(500,500)
 background('#D7E1FA')
 fillcolor = color(random(255), random(255), random(255))
 aquatic = Aquatic(width/2, height/2, 100, fillcolor)
-aquatic.draw()
+aquatic.drawAquatic()
