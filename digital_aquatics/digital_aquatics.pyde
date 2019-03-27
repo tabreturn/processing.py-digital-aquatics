@@ -53,7 +53,7 @@ class Aquatic:
             rotation = 0
 
             for eyelash in range( int(random(3,8)) ):
-                randomrotation = random(0.1,0.7)
+                randomrotation = random(0.2,0.7)
                 rotation += randomrotation
                 rotate(randomrotation)
                 line(0, 0, random(-eyesize*2,-eyesize*1.2), 0)
@@ -140,8 +140,9 @@ class Aquatic:
         #hairs
         a = random(0.7,1.2)
         b = 1
-        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, 
-                        drawhairs=True)
+        if random(1) > 0.5:
+            self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, 
+                            drawhairs=True)
         # body
         fill(self.f)
         stroke(self.r/2, self.g/2, self.b/2) 
@@ -185,7 +186,7 @@ class Aquatic:
                 eyex = eyex+random(-10,10)
                 eyex += random(30,50)
                 eyey = self.y+random(-self.s/2)
-                eyesize = 5+random(self.s/5.0)
+                eyesize = 8+random(self.s/5.0)
                 
                 tup = (eyex, eyey, eyesize)
                 self.eyelist.append(tup)
@@ -193,34 +194,12 @@ class Aquatic:
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
 
-
-
-            '''
-            nofill()
-            x = p.x-self.x
-            y = p.y-self.y
-            lx = random(x)
-            ly = random(y)
-            m = random(30)
-            stroke(self.c);strokewidth(1.0)
-            beginpath(p.x,p.y)
-            curveto(p.x+random(m),p.y+random(m),p.x-random(m),p.y-random(m),
-                    p.x+random(lx),p.y+random(ly))
-            endpath()
-            '''
-
-        '''
-        self.geefpad()
-        
-        def geefpad(self):
-            return self.p
-        '''
-
 size(500,500)
 background('#D7E1FA')
 fillcolor = color(random(255), 
                   random(255), 
                   random(255),
                   random(128,230))
-aquatic = Aquatic(width/2, height/2, 100, fillcolor)
+
+aquatic = Aquatic(width/2, height/2, random(80,150), fillcolor)
 aquatic.drawAquatic()
