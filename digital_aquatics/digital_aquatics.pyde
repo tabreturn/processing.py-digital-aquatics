@@ -50,15 +50,15 @@ class Aquatic:
         if random(1) > 0.3:
             strokeWeight(2)
             translate(eyex,eyey)
-            rotation = 0
+            rot = 0
 
             for eyelash in range( int(random(3,8)) ):
-                randomrotation = random(0.2,0.7)
-                rotation += randomrotation
-                rotate(randomrotation)
+                randomrot = random(0.2,0.7)
+                rot += randomrot
+                rotate(randomrot)
                 line(0, 0, random(-eyesize*2,-eyesize*1.2), 0)
 
-            rotate(-rotation)
+            rotate(-rot)
             translate(-eyex,-eyey)
 
         # eye
@@ -70,12 +70,6 @@ class Aquatic:
         # eyelid
         if random(1) > 0.5:
             cover = self.drawEyeLid(eyex, eyey, eyesize)
-    
-    '''
-    def linedash(self, path, segment, gap):
-        path._nsBezierPath.setLineDash_count_phase_([segment,gap],2,0)
-        return path
-    '''
 
     def drawHair(self, hairx, hairy, hairlength, angle):
         tipx = cos(angle) * hairlength
@@ -129,14 +123,29 @@ class Aquatic:
         if random(1) > 0.5:
             n1 = -0.8-random(5)
         else:
-            n1 =  0.8+random(5)
+            n1 = 0.8+random(5)
 
         n2 = 0.5+random(5)
         n3 = 0.5+random(0.5,-1.5)
 
+        # nucleus
+        rot = random(-PI,PI)
+        xoff = self.x-self.s/3 * (1 if random(1) < 0.5 else -1)
+        yoff = self.y-self.s/random(1.5,20)
+        translate(xoff, yoff)
+        rotate(rot)
+        fill(self.r/2, self.g/2, self.b/2, 80)
+        noStroke()
+        ellipse(0, 0, self.s/random(1.5,5), self.s/random(1.5,5))
+        fill(self.r/3, self.g/3, self.b/3, 120)
+        ellipse(0, 0, self.s/6, self.s/6)
+        rotate(-rot)
+        translate(-xoff, -yoff)
+
         # supershapes
         rot = random(HALF_PI-0.2, HALF_PI+0.2)
-        translate(self.x,self.y); rotate(rot)
+        translate(self.x,self.y)
+        rotate(rot)
         #hairs
         a = random(0.7,1.2)
         b = 1
@@ -159,8 +168,17 @@ class Aquatic:
         self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
                         xoff=xoff, xdistort=1.5, cw=False)
         endShape(CLOSE)
+        # freckles
+        fill(self.r*1.8, self.g*1.8, self.b*1.8, 200)
+        noStroke()
+        for i in range(80):
+            freckx = i/self.s*40 * sin(i*15)+random(1,10)
+            frecky = i/self.s*90 * cos(i*15)+random(1,10)
+            dotsize = random(1,6)
+            ellipse(freckx,frecky, dotsize,dotsize)
         # lips
         noFill()
+        stroke(self.r/2, self.g/2, self.b/2) 
         strokeWeight(self.s/12.0)
         beginShape()
         self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI, 
