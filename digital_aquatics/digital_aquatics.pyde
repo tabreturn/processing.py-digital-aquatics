@@ -93,8 +93,8 @@ class Aquatic:
         # plot supershape clock/counter-clockwise
         # drawing hairs only works on clockwise
         angle = start
-        tuftstart = random(PI)
-        tuftend = random(TWO_PI)
+        tuftstart = random(0,PI)
+        tuftend = random(PI,TWO_PI)
 
         if cw:
             while angle < stop:
@@ -104,11 +104,11 @@ class Aquatic:
                 else:
                     noFill()
                     stroke(self.r/2, self.g/2, self.b/2, 200) 
-                    strokeWeight(1)
+                    strokeWeight(0.8)
                     self.drawHair(xy[0],xy[1], radius*random(1.1,1.2), angle)
                     if angle > tuftstart and angle < tuftend:
-                        strokeWeight(2.2)
-                        self.drawHair(xy[0],xy[1], radius*random(1.2,1.4), angle)
+                        strokeWeight(2)
+                        self.drawHair(xy[0],xy[1], radius*random(1.3,1.5), angle)
                 angle += 0.05
         else:
             while angle > stop:
@@ -149,7 +149,7 @@ class Aquatic:
         #hairs
         a = random(0.7,1.2)
         b = 1
-        if random(1) > 0.5:
+        if random(1) > 0.3:
             self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, 
                             drawhairs=True)
         # body
