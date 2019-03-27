@@ -14,7 +14,10 @@ class Aquatic:
         self.g = green(self.f)
         self.b = blue(self.f)
         self.a = alpha(self.f)
+
         self.eyelist = []
+        self.current = [random(-self.s/8,self.s/8), 
+                        random(-self.s/8,self.s/8)]
         #self.backpad = ellipse(10,10,0,0)
         #self.backpadintern = []
         #self.backpadextern = []
@@ -45,9 +48,9 @@ class Aquatic:
 
         # eyelashes
         if random(1) > 0.3:
-            strokeWeight(3)
+            strokeWeight(2)
         
-            for eyelash in range( int(random(8)) ):
+            for eyelash in range( int(random(3,8)) ):
 
                 if random(1) > 0.5:
                     lashx = random(-eyesize*1.5, 0)
@@ -62,6 +65,7 @@ class Aquatic:
         strokeWeight(2)
         ellipse(eyex, eyey, eyesize*2, eyesize*2)
         self.drawIrisPupil(eyex, eyey, eyesize)
+
         # eyelid
         if random(1) > 0.5:
             cover = self.drawEyeLid(eyex, eyey, eyesize)
@@ -73,14 +77,11 @@ class Aquatic:
     '''
 
     def drawHair(self, hairx, hairy, hairlength, angle):
-        noFill()
-        stroke(self.r/2, self.g/2, self.b/2, 140) 
-        strokeWeight(1.6)
-        tipx = cos(angle) * self.r
-        tipy = sin(angle) * self.r
+        tipx = cos(angle) * hairlength
+        tipy = sin(angle) * hairlength
         curve(hairx-random(-100,100), hairy+random(-100,100), 
               hairx, hairy, 
-              tipx, tipy, 
+              tipx+self.current[0], tipy+self.current[1], 
               tipx-random(-100,100), tipy+random(-100,100))
 
     def superShape(self, m, n1, n2, n3, a, b, radius, start, stop, 
@@ -97,40 +98,49 @@ class Aquatic:
         # plot supershape clock/counter-clockwise
         # drawing hairs only works on clockwise
         angle = start
+        tuftstart = random(PI)
+        tuftend = random(TWO_PI)
+
         if cw:
             while angle < stop:
                 xy = superShapeVertex(angle)
                 if not drawhairs:
                     vertex(xy[0],xy[1])
                 else:
-                    self.drawHair(xy[0],xy[1], radius/random(1,1.2), angle)
-                angle += 0.1
+                    noFill()
+                    stroke(self.r/2, self.g/2, self.b/2, 200) 
+                    strokeWeight(1)
+                    self.drawHair(xy[0],xy[1], radius*random(1.1,1.2), angle)
+                    if angle > tuftstart and angle < tuftend:
+                        strokeWeight(2.2)
+                        self.drawHair(xy[0],xy[1], radius*random(1.2,1.4), angle)
+                angle += 0.05
         else:
             while angle > stop:
                 xy = superShapeVertex(angle)
                 vertex(xy[0],xy[1])
-                angle -= 0.1
+                angle -= 0.05
 
     def drawAquatic(self):
         # outline/mouth variables
         m = int( random(1,30) )
+
         if random(1) > 0.5:
             n1 = -0.8-random(5)
         else:
             n1 =  0.8+random(5)
+
         n2 = 0.5+random(5)
         n3 = 0.5+random(0.5,-1.5)
 
-        # outline/mouth properties
-        
-        rot = random(HALF_PI-0.2, HALF_PI+0.2)
-
         # supershapes
+        rot = random(HALF_PI-0.2, HALF_PI+0.2)
         translate(self.x,self.y); rotate(rot)
         #hairs
         a = random(0.7,1.2)
         b = 1
-        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, drawhairs=True)
+        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5, 
+                        drawhairs=True)
         # body
         fill(self.f)
         stroke(self.r/2, self.g/2, self.b/2) 
