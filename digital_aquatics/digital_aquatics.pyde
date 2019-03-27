@@ -49,16 +49,17 @@ class Aquatic:
         # eyelashes
         if random(1) > 0.3:
             strokeWeight(2)
-        
+            translate(eyex,eyey)
+            rotation = 0
+
             for eyelash in range( int(random(3,8)) ):
+                randomrotation = random(0.1,0.7)
+                rotation += randomrotation
+                rotate(randomrotation)
+                line(0, 0, random(-eyesize*2,-eyesize*1.2), 0)
 
-                if random(1) > 0.5:
-                    lashx = random(-eyesize*1.5, 0)
-                else:
-                    lashx = random( eyesize*1.5, 0)
-
-                lashy = random(-eyesize*2, eyesize/2)
-                line(eyex, eyey, eyex+lashx, eyey+lashy)
+            rotate(-rotation)
+            translate(-eyex,-eyey)
 
         # eye
         fill(255)
