@@ -9,9 +9,9 @@ def setup():
                     random(255),
                     random(255),
                     random(128,230))
-    
+
     # remove bubble and bgcolor arguments for a transparent perimeter
-    aquatic = Aquatic(width/2, height/2, random(80, 130), 
+    aquatic = Aquatic(width/2, height/2, random(80, 130),
                     fillcolor, bubble=True, bgcolor='#D7E1FA')
     aquatic.drawAquatic()
 
@@ -47,8 +47,13 @@ class Aquatic:
         s = pupilsize/4 + random(pupilsize/3)
 
         # iris
-        fill(self.r*2, self.g, self.b, self.a/2)
-        stroke(self.r, self.g/2, self.b, 140)
+        if random(1) < 0.7:
+            fill(255-self.r, 255-self.g, 255-self.b, self.a/1.5)
+            stroke(255-self.r, 255-self.g/2, 255-self.b, 140)
+        else:
+            fill(self.r*2, self.g, self.b, self.a/2)
+            stroke(self.r, self.g/2, self.b, 140)
+
         strokeWeight(2)
         ellipse(pupilx, pupily, s*2, s*2)
 
@@ -93,7 +98,7 @@ class Aquatic:
         shinexy = eyesize/4
         shinesize = eyesize/2.5
         ellipse(eyex-shinexy, eyey-shinexy, shinesize, shinesize)
-        
+
         # eyelid
         if random(1) > .5:
             cover = self.drawEyeLid(eyex, eyey, eyesize)
@@ -159,7 +164,7 @@ class Aquatic:
         mn3 = .81 + random(-.8, .8)
         mradius = self.s * random(.2, .4)
         mxoff = self.s / random(.9, 1.1)
-        
+
         # bubbles
         if self.bubble:
             noStroke()
@@ -169,7 +174,7 @@ class Aquatic:
                     bs, bs)
             ellipse(self.x+random(-bs, bs), self.y+random(-bs, bs),
                     self.s/2, self.s/2)
-        
+
         # nucleus
         rot = random(-PI, PI)
         xoff = self.x-self.s/3 * (1 if random(1) < .5 else -1)
@@ -230,10 +235,8 @@ class Aquatic:
         vertex(width*4, -height*2)
         beginContour()
         self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5)
-        beginContour()
         self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                         xoff=mxoff, xdistort=1.5, cw=False)
-        endContour()
         endContour()
         endShape(CLOSE)
         # lips
