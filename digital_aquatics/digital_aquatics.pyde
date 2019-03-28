@@ -1,5 +1,5 @@
 # This is a Processing.py adaption of a Nodebox script:
-# "Aquatics!" by Lieven Menschaert, which implements Johan Gielis' Superformula equations
+# "Aquatics!" by Lieven Menschaert (using Johan Gielis' Superformula equations)
 # https://www.nodebox.net/code/index.php/Aquatics
 
 class Aquatic:
@@ -105,7 +105,8 @@ class Aquatic:
                     self.drawHair(xy[0], xy[1], radius*random(1.1, 1.2), angle)
                     if angle > tuftstart and angle < tuftend:
                         strokeWeight(2)
-                        self.drawHair(xy[0], xy[1], radius*random(1.3, 1.5), angle)
+                        hairlength = radius*random(1.3, 1.5)
+                        self.drawHair(xy[0], xy[1], hairlength, angle)
                 angle += 0.05
         else:
             while angle > stop:
