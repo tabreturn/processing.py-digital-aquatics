@@ -42,11 +42,11 @@ class Aquatic:
         arc(eyex, eyey, eyesize*2, eyesize*2, PI, TWO_PI, CHORD)
 
     def drawEyes(self, eyex, eyey, eyesize):
-        stroke(self.r/2, self.g/2, self.b/2)
+        stroke(self.r/2, self.g/2, self.b/2, 220)
 
         # eyelashes
         if random(1) > .3:
-            strokeWeight(2)
+            strokeWeight(2.5)
             translate(eyex, eyey)
             rot = 0
 
@@ -64,7 +64,13 @@ class Aquatic:
         strokeWeight(2)
         ellipse(eyex, eyey, eyesize*2, eyesize*2)
         self.drawIrisPupil(eyex, eyey, eyesize)
-
+        # eye shine
+        fill(255)
+        noStroke()
+        shinexy = eyesize/4
+        shinesize = eyesize/2.5
+        ellipse(eyex-shinexy, eyey-shinexy, shinesize, shinesize)
+        
         # eyelid
         if random(1) > .5:
             cover = self.drawEyeLid(eyex, eyey, eyesize)
@@ -179,8 +185,8 @@ class Aquatic:
         # freckles
         fill(self.r*1.8, self.g*1.8, self.b*1.8, 200)
         noStroke()
-        for i in range(80):
-            freckx = i/self.s*40 * sin(i*15) + random(1, 10)
+        for i in range(20,80):
+            freckx = i/self.s*60 * sin(i*15) + random(1, 10)
             frecky = i/self.s*90 * cos(i*15) + random(1, 10)
             dotsize = random(1, 6)
             ellipse(freckx, frecky, dotsize, dotsize)
