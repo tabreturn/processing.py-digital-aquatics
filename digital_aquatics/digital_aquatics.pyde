@@ -4,7 +4,7 @@
 
 class Aquatic:
 
-    def __init__(self, x ,y, size, fillcolor):
+    def __init__(self, x ,y, size, fillcolor, bubble=False):
         # main variables
         self.x = x
         self.y = y
@@ -14,6 +14,7 @@ class Aquatic:
         self.g = green(self.f)
         self.b = blue(self.f)
         self.a = alpha(self.f)
+        self.bubble = bubble
         self.eyelist = []
         self.currentx = random(-self.s/8, self.s/8)
         self.currenty = random(-self.s/8, self.s/8)
@@ -144,6 +145,12 @@ class Aquatic:
         rotate(-rot)
         translate(-xoff, -yoff)
 
+        # bubble
+        if self.bubble:
+            fill(255, 255, 255, 200)
+            ellipse(self.x+random(-self.s,self.s), self.y+random(-self.s,self.s),
+                    self.s, self.s)
+
         # supershapes
         rot = random(HALF_PI-.3, HALF_PI+.3)
         translate(self.x, self.y)
@@ -154,20 +161,11 @@ class Aquatic:
                             mode='hair')
         # ectoplasm
         noFill()
-        stroke(255, 255, 255, 180)
+        stroke(255, 255, 255)
         strokeWeight(self.s/8)
         beginShape()
         self.superShape(bm, n1, n2, bn3, ba, bb, self.s-self.s/12, .5, TWO_PI-.5)
         endShape()
-        # s's
-        fill(self.r/2, self.g/2, self.b/2, 40)
-        for i in range( int(random(2,5)) ):
-            play = self.s/4
-            textSize( random(self.s/4, play) )
-            rot = random(TWO_PI)
-            rotate(rot)
-            text('S', random(-play,play), random(-play,play))
-            rotate(-rot)
         # body
         fill(self.r, self.g, self.b, 120)
         stroke(self.r/2, self.g/2, self.b/2)
@@ -186,6 +184,13 @@ class Aquatic:
             frecky = i/self.s*90 * cos(i*15) + random(1, 10)
             dotsize = random(1, 6)
             ellipse(freckx, frecky, dotsize, dotsize)
+        # characters
+        chars = 'S*.~_.)`:;*"-'
+        for char in chars:
+            fill(self.r/2, self.g/2, self.b/2, 40)
+            play = self.s/2
+            textSize( random(play/2, play/3) )
+            text(char, random(-play, play/2), random(-play*1.5, play*1.5))
         # lips
         noFill()
         stroke(self.r/2, self.g/2, self.b/2)
@@ -214,7 +219,7 @@ class Aquatic:
             if eyex < self.x+self.s-self.s/2:
                 eyex = eyex + random(-10, 10)
                 eyex += random(30, 50)
-                eyey = self.y + random(-self.s/2)
+                eyey = self.y + random(-self.s/1.5)
                 eyesize = 8 + random(self.s/5.0)
 
                 tup = (eyex, eyey, eyesize)
@@ -230,5 +235,5 @@ fillcolor = color(random(255),
                   random(255),
                   random(255),
                   random(128,230))
-aquatic = Aquatic(width/2, height/2, random(80, 150), fillcolor)
+aquatic = Aquatic(width/2, height/2, random(80, 150), fillcolor, bubble=True)
 aquatic.drawAquatic()
