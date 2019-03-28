@@ -210,12 +210,12 @@ class Aquatic:
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
 
+# setup sketch and spawn an aquatic
 size(500, 500)
 background('#D7E1FA')
 fillcolor = color(random(255),
                   random(255),
                   random(255),
                   random(128,230))
-
 aquatic = Aquatic(width/2, height/2, random(80, 150), fillcolor)
 aquatic.drawAquatic()
