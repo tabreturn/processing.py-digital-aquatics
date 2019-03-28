@@ -14,10 +14,10 @@ class Aquatic:
         self.g = green(self.f)
         self.b = blue(self.f)
         self.a = alpha(self.f)
-
         self.eyelist = []
         self.currentx = random(-self.s/8, self.s/8)
         self.currenty = random(-self.s/8, self.s/8)
+        strokeJoin(ROUND)
 
     def drawIrisPupil(self, pupilx, pupily, pupilsize):
         s = pupilsize/4 + random(pupilsize/3)
@@ -44,13 +44,13 @@ class Aquatic:
         stroke(self.r/2, self.g/2, self.b/2)
 
         # eyelashes
-        if random(1) > 0.3:
+        if random(1) > .3:
             strokeWeight(2)
             translate(eyex, eyey)
             rot = 0
 
             for eyelash in range( int(random(3, 8)) ):
-                randomrot = random(0.2, 0.7)
+                randomrot = random(.2, .7)
                 rot += randomrot
                 rotate(randomrot)
                 line(0, 0, random(-eyesize*2, -eyesize*1.2), 0)
@@ -65,7 +65,7 @@ class Aquatic:
         self.drawIrisPupil(eyex, eyey, eyesize)
 
         # eyelid
-        if random(1) > 0.5:
+        if random(1) > .5:
             cover = self.drawEyeLid(eyex, eyey, eyesize)
 
     def drawHair(self, hairx, hairy, hairlength, angle):
@@ -77,7 +77,7 @@ class Aquatic:
               tipx-random(-100, 100), tipy+random(-100, 100))
 
     def superShape(self, m, n1, n2, n3, a, b, radius, start, stop,
-                   xoff=0, yoff=0, xdistort=1, cw=True, drawhairs=False):
+                   xoff=0, yoff=0, xdistort=1, cw=True, mode='vertex'):
         # https://en.wikipedia.org/wiki/Superformula
         def superShapeVertex(angle):
             t1 = pow( abs( (1.0/a) * cos(angle*m/4) ), n2 )
@@ -96,39 +96,43 @@ class Aquatic:
         if cw:
             while angle < stop:
                 xy = superShapeVertex(angle)
-                if not drawhairs:
+                if mode == 'vertex':
                     vertex(xy[0], xy[1])
-                else:
+                elif mode == 'hair':
                     noFill()
                     stroke(self.r/2, self.g/2, self.b/2, 200)
-                    strokeWeight(0.8)
+                    strokeWeight(.8)
                     self.drawHair(xy[0], xy[1], radius*random(1.1, 1.2), angle)
                     if angle > tuftstart and angle < tuftend:
                         strokeWeight(2)
                         hairlength = radius*random(1.3, 1.5)
                         self.drawHair(xy[0], xy[1], hairlength, angle)
-                angle += 0.05
+                angle += .05
         else:
             while angle > stop:
                 xy = superShapeVertex(angle)
                 vertex(xy[0], xy[1])
-                angle -= 0.05
+                angle -= .05
 
     def drawAquatic(self):
         # outline/mouth variables
-        m = int( random(1, 30) )
-
-        if random(1) > 0.5:
-            n1 = -0.8 - random(5)
-        else:
-            n1 = 0.8 + random(5)
-
-        n2 = 0.5 + random(5)
-        n3 = 0.5 + random(0.5, -1.5)
+        # b_ for body; m_ for mouth
+        n1 = (-.8-random(5) if random(1) < .5 else .8+random(5))
+        n2 = .5 + random(5)
+        ba = random(.7, 1.2)
+        bb = 1
+        bm = int( random(1, 30) )
+        bn3 = .5 + random(.5, -1.5)
+        ma = random(.9, 1.1)
+        mb = random(.9, 1.1)
+        mm = 4 + random(20)
+        mn3 = .81 + random(-.8, .8)
+        mradius = self.s * random(.2, .4)
+        mxoff = self.s / random(.9, 1.1)
 
         # nucleus
         rot = random(-PI, PI)
-        xoff = self.x-self.s/3 * (1 if random(1) < 0.5 else -1)
+        xoff = self.x-self.s/3 * (1 if random(1) < .5 else -1)
         yoff = self.y-self.s / random(1.5, 20)
         translate(xoff, yoff)
         rotate(rot)
@@ -141,30 +145,38 @@ class Aquatic:
         translate(-xoff, -yoff)
 
         # supershapes
-        rot = random(HALF_PI-0.3, HALF_PI+0.3)
+        rot = random(HALF_PI-.3, HALF_PI+.3)
         translate(self.x, self.y)
         rotate(rot)
         #hairs
-        a = random(0.7, 1.2)
-        b = 1
-        if random(1) > 0.3:
-            self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5,
-                            drawhairs=True)
+        if random(1) > .3:
+            self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5,
+                            mode='hair')
+        # ectoplasm
+        noFill()
+        stroke(255, 255, 255, 180)
+        strokeWeight(self.s/8)
+        beginShape()
+        self.superShape(bm, n1, n2, bn3, ba, bb, self.s-self.s/12, .5, TWO_PI-.5)
+        endShape()
+        # s's
+        fill(self.r/2, self.g/2, self.b/2, 40)
+        for i in range( int(random(2,5)) ):
+            play = self.s/4
+            textSize( random(self.s/4, play) )
+            rot = random(TWO_PI)
+            rotate(rot)
+            text('S', random(-play,play), random(-play,play))
+            rotate(-rot)
         # body
-        fill(self.f)
+        fill(self.r, self.g, self.b, 120)
         stroke(self.r/2, self.g/2, self.b/2)
         strokeWeight(self.s/22.5)
         beginShape()
-        self.superShape(m, n1, n2, n3, a, b, self.s, 0.5, TWO_PI-0.5)
-        #mouth
-        m = 4 + random(20)
-        n3 = 0.81 + random(-0.8, 0.8)
-        a = random(0.9, 1.1)
-        b = random(0.9, 1.1)
-        radius = self.s * random(0.2, 0.4)
-        xoff = self.s / random(0.9, 1.1)
-        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI,
-                        xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5)
+        # mouth
+        self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
+                        xoff=mxoff, xdistort=1.5, cw=False)
         endShape(CLOSE)
         # freckles
         fill(self.r*1.8, self.g*1.8, self.b*1.8, 200)
@@ -179,17 +191,17 @@ class Aquatic:
         stroke(self.r/2, self.g/2, self.b/2)
         strokeWeight(self.s/12.0)
         beginShape()
-        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI,
-                        xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
+                        xoff=mxoff, xdistort=1.5, cw=False)
         endShape()
-        stroke((self.r + self.g) * 0.8,
-               (self.g + self.b) * 0.8,
-               (self.b + self.r) * 0.8,
+        stroke((self.r + self.g) * .8,
+               (self.g + self.b) * .8,
+               (self.b + self.r) * .8,
                128)
         strokeWeight(self.s/22.5)
         beginShape()
-        self.superShape(m, 0.98, 3.0, n3, a, b, radius, PI+HALF_PI, HALF_PI,
-                        xoff=xoff, xdistort=1.5, cw=False)
+        self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
+                        xoff=mxoff, xdistort=1.5, cw=False)
         endShape()
         rotate(-rot)
         translate(-self.x, -self.y)
