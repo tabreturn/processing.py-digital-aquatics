@@ -2,9 +2,31 @@
 # "Aquatics!" by Lieven Menschaert (using Johan Gielis' Superformula equations)
 # https://www.nodebox.net/code/index.php/Aquatics
 
+# setup sketch and spawn an aquatic
+def setup():
+    size(500, 500)
+    fillcolor = color(random(255),
+                    random(255),
+                    random(255),
+                    random(128,230))
+    
+    # remove bubble and bgcolor arguments for a transparent perimeter
+    aquatic = Aquatic(width/2, height/2, random(80, 130), 
+                    fillcolor, bubble=True, bgcolor='#D7E1FA')
+    aquatic.drawAquatic()
+
+def draw():pass
+
+# save image by pressing s key
+def keyPressed():
+    if key == 's':
+        timestamp = ('{}-{}-{}'.format(hour(), minute(), second()))
+        saveFrame(timestamp)
+
+
 class Aquatic:
 
-    def __init__(self, x ,y, size, fillcolor, bubble=False):
+    def __init__(self, x ,y, size, fillcolor, bubble=False, bgcolor=None):
         # main variables
         self.x = x
         self.y = y
@@ -15,6 +37,7 @@ class Aquatic:
         self.b = blue(self.f)
         self.a = alpha(self.f)
         self.bubble = bubble
+        self.bg = bgcolor
         self.eyelist = []
         self.currentx = random(-self.s/8, self.s/8)
         self.currenty = random(-self.s/8, self.s/8)
@@ -136,35 +159,35 @@ class Aquatic:
         mn3 = .81 + random(-.8, .8)
         mradius = self.s * random(.2, .4)
         mxoff = self.s / random(.9, 1.1)
-
+        
+        # bubbles
+        if self.bubble:
+            noStroke()
+            fill(255, 255, 255)
+            bs = self.s * 0.8
+            ellipse(self.x+random(-bs, bs), self.y+random(-bs, bs),
+                    bs, bs)
+            ellipse(self.x+random(-bs, bs), self.y+random(-bs, bs),
+                    self.s/2, self.s/2)
+        
         # nucleus
         rot = random(-PI, PI)
         xoff = self.x-self.s/3 * (1 if random(1) < .5 else -1)
-        yoff = self.y-self.s / random(1.5, 20)
+        yoff = self.y+self.s / random(1.5, 20)
         translate(xoff, yoff)
         rotate(rot)
         fill(self.r/2, self.g/2, self.b/2, 80)
-        noStroke()
-        ellipse(0, 0, self.s/random(1.5, 5), self.s/random(1.5, 5))
+        stroke(self.r/2, self.g/2, self.b/2, 80)
+        ellipse(0, 0, self.s/random(1, 3), self.s/random(1, 3))
         fill(self.r/3, self.g/3, self.b/3, 120)
         ellipse(0, 0, self.s/6, self.s/6)
         rotate(-rot)
         translate(-xoff, -yoff)
 
-        # bubble
-        if self.bubble:
-            fill(255, 255, 255, 200)
-            ellipse(self.x+random(-self.s,self.s), self.y+random(-self.s,self.s),
-                    self.s, self.s)
-
         # supershapes
         rot = random(HALF_PI-.3, HALF_PI+.3)
         translate(self.x, self.y)
         rotate(rot)
-        #hairs
-        if random(1) > .3:
-            self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5,
-                            mode='hair')
         # ectoplasm
         noFill()
         stroke(255, 255, 255)
@@ -174,8 +197,8 @@ class Aquatic:
         endShape()
         # body
         fill(self.r, self.g, self.b, 120)
-        stroke(self.r/2, self.g/2, self.b/2)
-        strokeWeight(self.s/22.5)
+        stroke(self.r/2, self.g/2, self.b/2, 220)
+        strokeWeight(self.s/12)
         beginShape()
         self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5)
         # mouth
@@ -183,20 +206,36 @@ class Aquatic:
                         xoff=mxoff, xdistort=1.5, cw=False)
         endShape(CLOSE)
         # freckles
-        fill(self.r*1.8, self.g*1.8, self.b*1.8, 200)
+        fill(self.r*1.8, self.g*1.8, self.b*1.8, 150)
         noStroke()
-        for i in range(20,80):
-            freckx = i/self.s*60 * sin(i*15) + random(1, 10)
-            frecky = i/self.s*90 * cos(i*15) + random(1, 10)
-            dotsize = random(1, 6)
+        for i in range(10,200):
+            freckx = i/self.s*150 * sin(i*15) + random(1, 10)
+            frecky = i/self.s*150 * cos(i*15) + random(1, 10)
+            dotsize = random(1, 10)
             ellipse(freckx, frecky, dotsize, dotsize)
         # characters
-        chars = 'S*.~_.)`:;*"-'
+        chars = 's*.~_.)`:;*"-'
         for char in chars:
-            fill(self.r/2, self.g/2, self.b/2, 40)
+            fill(self.r/2, self.g/2, self.b/2, 70)
             play = self.s/2
-            textSize( random(play/2, play/3) )
+            textSize( random(play/3, play/1.5) )
             text(char, random(-play, play/2), random(-play*1.5, play*1.5))
+        # background-colored mask
+        fill(self.bg)
+        noStroke()
+        beginShape()
+        vertex(-width*2, -height*2)
+        vertex(-width*2, height*4)
+        vertex(width*4, height*4)
+        vertex(width*4, -height*2)
+        beginContour()
+        self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5)
+        beginContour()
+        self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
+                        xoff=mxoff, xdistort=1.5, cw=False)
+        endContour()
+        endContour()
+        endShape(CLOSE)
         # lips
         noFill()
         stroke(self.r/2, self.g/2, self.b/2)
@@ -214,6 +253,10 @@ class Aquatic:
         self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                         xoff=mxoff, xdistort=1.5, cw=False)
         endShape()
+        #hairs
+        if random(1) > .3:
+            self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5,
+                            mode='hair')
         rotate(-rot)
         translate(-self.x, -self.y)
 
@@ -225,7 +268,7 @@ class Aquatic:
             if eyex < self.x+self.s-self.s/2:
                 eyex = eyex + random(-10, 10)
                 eyex += random(30, 50)
-                eyey = self.y + random(-self.s/1.5)
+                eyey = self.y + random(-self.s/1.5, self.s/5)
                 eyesize = 8 + random(self.s/5.0)
 
                 tup = (eyex, eyey, eyesize)
@@ -233,13 +276,3 @@ class Aquatic:
 
         for eye in self.eyelist:
             self.drawEyes(eye[0], eye[1], eye[2])
-
-# setup sketch and spawn an aquatic
-size(500, 500)
-background('#D7E1FA')
-fillcolor = color(random(255),
-                  random(255),
-                  random(255),
-                  random(128,230))
-aquatic = Aquatic(width/2, height/2, random(80, 150), fillcolor, bubble=True)
-aquatic.drawAquatic()
