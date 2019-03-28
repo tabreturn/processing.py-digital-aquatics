@@ -1,6 +1,7 @@
 # processing.py-digital-aquatics
 
-This is a Processing.py adaption of the Nodebox script:  
-["Aquatics!"](https://www.nodebox.net/code/index.php/Aquatics) by Lieven Menschaert (using Johan Gielis' Superformula equations)
+A Processing.py adaption of Lieven Menschaert's Nodebox script, ["Aquatics!"](https://www.nodebox.net/code/index.php/Aquatics).
+
+The script implements Johan Gielis' Superformula equations, generating a new beastie with each run.
 
 ![](aquatics.png)
