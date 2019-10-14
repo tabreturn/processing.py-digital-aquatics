@@ -1,4 +1,4 @@
-# processing.py-digital-aquatics
+# Digital Aquatics
 
 A Processing.py adaption of Lieven Menschaert's Nodebox script, ["Aquatics!"](https://www.nodebox.net/code/index.php/Aquatics).
 
