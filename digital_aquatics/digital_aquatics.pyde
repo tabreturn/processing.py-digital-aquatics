@@ -26,7 +26,7 @@ def keyPressed():
 
 class Aquatic:
 
-    def __init__(self, x ,y, size, fillcolor, bubble=False, bgcolor=None):
+    def __init__(self, x, y, size, fillcolor, bubble=False, bgcolor=None):
         # main variables
         self.x = x
         self.y = y
