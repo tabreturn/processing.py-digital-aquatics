@@ -4,7 +4,7 @@
 
 function setup() {
   createCanvas(500, 500);
-background('#D7E1FA')
+
   let fillcolor = color(random(255), 
                         random(255), 
                         random(255), 
@@ -43,7 +43,7 @@ class Aquatic {
     this.currenty = random(-this.s/8, this.s/8);
     strokeJoin(ROUND)
   }
-  /*
+
   drawIrisPupil(pupilx, pupily, pupilsize) {
     let s = pupilsize/4 + random(pupilsize/3);
 
@@ -67,15 +67,15 @@ class Aquatic {
   }
 
   drawEyeLid(eyex, eyey, eyesize) {
-    fill('#000000');//fill(self.r, self.g, self.b, random(200, 240));
-    stroke(self.r/2, self.g/2, self.b/2);
+    fill('#000000');//fill(this.r, this.g, this.b, random(200, 240));
+    stroke(this.r/2, this.g/2, this.b/2);
     strokeWeight(1);
     //arc(eyex, eyey, eyesize*2, eyesize*2, PI, TWO_PI, CHORD);
     arc(1,1,1,1,1,1)
   }
-  
+
   drawEyes(eyex, eyey, eyesize) {
-    stroke(self.r/2, self.g/2, self.b/2, 220)
+    stroke(this.r/2, this.g/2, this.b/2, 220)
 
     // eyelashes
     if (random(1) > 0.3) {
@@ -122,10 +122,10 @@ class Aquatic {
     let tipx = cos(angle) * hairlength;
     let tipy = sin(angle) * hairlength;
     curve(hairx-random(-100, 100), hairy+random(-100, 100), hairx, hairy,
-          tipx+self.currentx, tipy+self.currenty, tipx-random(-100, 100), 
+          tipx+this.currentx, tipy+this.currenty, tipx-random(-100, 100), 
           tipy+random(-100, 100));
   }
-  */
+
   superShape(m, n1, n2, n3, a, b, radius, start, stop, xoff, yoff, 
              xdistort, cw, mode) {
     // https://en.wikipedia.org/wiki/Superformula
@@ -187,7 +187,7 @@ class Aquatic {
     let mn3 = 0.81 + random(-0.8, 0.8);
     let mradius = this.s * random(0.2, 0.4);
     let mxoff = this.s / random(0.9, 1.1);
-    
+
     // bubbles
     if (this.bubble) {
       noStroke();
@@ -196,7 +196,7 @@ class Aquatic {
       ellipse(this.x + random(-bs, bs), this.y+random(-bs, bs), bs, bs);
       ellipse(this.x + random(-bs, bs), this.y+random(-bs, bs), this.s/2, this.s/2);
     }
-    
+
     // nucleus
     let rot = random(-PI, PI);
     let xoff = this.x-this.s/3 * (random(1) < 0.5 ? 1 : -1);
@@ -210,7 +210,7 @@ class Aquatic {
     ellipse(0, 0, this.s/6, this.s/6);
     rotate(-rot);
     translate(-xoff, -yoff);
-    
+
     // supershapes
     rot = random(HALF_PI-0.3, HALF_PI+0.3);
     translate(this.x, this.y)
@@ -218,7 +218,7 @@ class Aquatic {
     // ectoplasm
     noFill();
     stroke(255, 255, 255);
-    strokeWeight(self.s/8);
+    strokeWeight(this.s/8);
     beginShape();
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s-this.s/12, 0.5, TWO_PI-0.5, 
                    0, 0, 1, true, 'vertex');
@@ -226,33 +226,31 @@ class Aquatic {
     // body
     fill(this.r, this.g, this.b, 120);
     stroke(this.r/2, this.g/2, this.b/2, 220);
-    strokeWeight(self.s/12);
+    strokeWeight(this.s/12);
     beginShape();
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5);
     // mouth
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI, 
                     mxoff, 0, 1.5, true, 'vertex');
     endShape(CLOSE);
-    /*
     // freckles
     fill(this.r*1.8, this.g*1.8, this.b*1.8, 150);
     noStroke();
     for (let i=10; i<200; i++) {
       let freckx = i/this.s*150 * sin(i*15) + random(1, 10);
-      let frecky = i/self.s*150 * cos(i*15) + random(1, 10);
+      let frecky = i/this.s*150 * cos(i*15) + random(1, 10);
       let dotsize = random(1, 10);
       ellipse(freckx, frecky, dotsize, dotsize);
     }
     // characters
     var chars = 's*.~_.)`:;*"-';
-    [...chars].forEach(c => {
-      fill(self.r/2, self.g/2, self.b/2, 70);
-      let play = self.s/2;
+    [...chars].forEach(char => {
+      fill(this.r/2, this.g/2, this.b/2, 70);
+      let play = this.s/2;
       textSize( random(play/3, play/1.5) );
       text(char, random(-play, play/2), random(-play*1.5, play*1.5));
     });
     // background-colored mask
-    
     fill(this.bg);
     noStroke();
     beginShape();
@@ -267,30 +265,28 @@ class Aquatic {
                     mxoff, 0, 1.5, false, 'vertex');
     endContour();
     endShape(CLOSE);
-    
     // lips
     noFill();
     stroke(this.r/2, this.g/2, this.b/2);
-    strokeWeight(self.s/12.0);
+    strokeWeight(this.s/12.0);
     beginShape();
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                     mxoff, 0, 1.5, false, 'vertex');
     endShape();
     stroke((this.r + this.g) * 0.8, (this.g + this.b) * 0.8, (this.b + this.r) * 0.8, 128);
-    strokeWeight(self.s/22.5);
+    strokeWeight(this.s/22.5);
     beginShape();
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                     mxoff, 0, 1.5, false, 'vertex');
     endShape();
     // hairs
     if (random(1) > 0.3) {
-      this.superShape(bm, n1, n2, bn3, ba, bb, self.s, 0.5, TWO_PI-0.5,
+      this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5,
                       0, 0, 1, true, 'hair')
       rotate(-rot);
-      translate(-self.x, -self.y);
+      translate(-this.x, -this.y);
     }
-    */
-    /*
+
     // eye locations
     let eyex = this.x-this.s-random(this.s/10);
     let eyes = 3+int(random(10));
@@ -300,18 +296,17 @@ class Aquatic {
       if (eyex < this.x+this.s-this.s/2) {
         eyex = eyex + random(-10, 10);
         eyex += random(30, 50);
-        let eyey = self.y + random(-self.s/1.5, self.s/5);
+        let eyey = this.y + random(-this.s/1.5, this.s/5);
         let eyesize = 8 + random(this.s/5.0);
         
         let tup = (eyex, eyey, eyesize);
         this.eyelist.push(tup);
       }
     }
-    
+
     this.eyelist.forEach(eye => {
+print(eye)
       this.drawEyes(eye[0], eye[1], eye[2]);
     });
-  */
   }
-
 }
