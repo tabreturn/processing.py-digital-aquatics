@@ -256,7 +256,7 @@ class Aquatic:
         self.superShape(bm, .98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                         xoff=mxoff, xdistort=1.5, cw=False)
         endShape()
-        #hairs
+        # hairs
         if random(1) > .3:
             self.superShape(bm, n1, n2, bn3, ba, bb, self.s, .5, TWO_PI-.5,
                             mode='hair')
