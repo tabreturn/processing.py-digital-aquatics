@@ -11,8 +11,8 @@ function setup() {
                         random(128, 230));
 
   // remove bubble and bgcolor arguments for a transparent perimeter
-  let aquatic = new Aquatic(width/2, height/2, random(80, 130), fillcolor, 
-                            true, '#D7E1FA');
+  let aquatic = new Aquatic(width/2, height/2, random(80, 130), fillcolor, true, 
+                            '#D7E1FA');
   aquatic.drawAquatic();
 }
 
@@ -193,8 +193,8 @@ class Aquatic {
       noStroke();
       fill(255, 255, 255);
       let bs = this.s * 0.8;
-      ellipse(this.x + random(-bs, bs), this.y+random(-bs, bs), bs, bs);
-      ellipse(this.x + random(-bs, bs), this.y+random(-bs, bs), this.s/2, this.s/2);
+      circle(this.x + random(-bs, bs), this.y+random(-bs, bs), bs);
+      circle(this.x + random(-bs, bs), this.y+random(-bs, bs), this.s/2);
     }
 
     // nucleus
@@ -261,7 +261,7 @@ class Aquatic {
     beginContour();
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0, 1, 
                     true, 'vertex');
-    this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
+    this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI, 
                     mxoff, 0, 1.5, false, 'vertex');
     endContour();
     endShape(CLOSE);
@@ -273,7 +273,10 @@ class Aquatic {
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                     mxoff, 0, 1.5, false, 'vertex');
     endShape();
-    stroke((this.r + this.g) * 0.8, (this.g + this.b) * 0.8, (this.b + this.r) * 0.8, 128);
+    stroke((this.r + this.g) * 0.8, 
+           (this.g + this.b) * 0.8, 
+           (this.b + this.r) * 0.8, 
+           128);
     strokeWeight(this.s/22.5);
     beginShape();
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
@@ -281,8 +284,8 @@ class Aquatic {
     endShape();
     // hairs
     if (random(1) > 0.3) {
-      this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5,
-                      0, 0, 1, true, 'hair')
+      this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0, 1, 
+                      true, 'hair')
       rotate(-rot);
       translate(-this.x, -this.y);
     }
