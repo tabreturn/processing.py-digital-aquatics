@@ -5,7 +5,7 @@
 
 function setup() {
   createCanvas(500, 500);
-background("#D7E1FA")
+
   let fillcolor = color(random(255),
                         random(255),
                         random(255),
@@ -286,8 +286,8 @@ fill(this.r, this.g, this.b, 120)
     endShape();
     // hairs
     if (random(1) > 0.3) {
-      //this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0,
-      //                1, true, "hair");
+      this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0,
+                      1, true, "hair");
       rotate(-rot);
       translate(-this.x, -this.y);
     }
