@@ -1,4 +1,4 @@
-// This is a Processing.py adaption of the Nodebox script:
+// This is a p5.js adaption of the Nodebox script:
 // "Aquatics!" by Lieven Menschaert (using Johan Gielis' Superformula equations)
 // https://www.nodebox.net/code/index.php/Aquatics
 
