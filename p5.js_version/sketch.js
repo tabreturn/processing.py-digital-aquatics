@@ -57,13 +57,13 @@ class Aquatic {
     }
 
     strokeWeight(2);
-    ellipse(10, 10, s*2, s*2);//ellipse(pupilx, pupily, s*2, s*2);
+    circle(10, 10, s*2);//circle(pupilx, pupily, s*2);
 
     // pupil
     fill(1)
     stroke(0);
     strokeWeight(5);
-    ellipse(10, 10, s/2, s/2);//ellipse(pupilx, pupily, s/2, s/2);
+    circle(10, 10, s/2);//circle(pupilx, pupily, s/2);
   }
 
   drawEyeLid(eyex, eyey, eyesize) {
@@ -100,8 +100,8 @@ class Aquatic {
     //fill(255);
     fill('#000000');
     strokeWeight(2);
-    //ellipse(eyex, eyey, eyesize*2, eyesize*2);
-    ellipse(10, 10, 10, 10);
+    //circle(eyex, eyey, eyesize*2);
+    circle(10, 10, 10);
     this.drawIrisPupil(eyex, eyey, eyesize);
     // eye shine
     //fill(255);
@@ -109,8 +109,8 @@ class Aquatic {
     noStroke();
     let shinexy = eyesize/4;
     let shinesize = eyesize/2.5;
-    //ellipse(eyex-shinexy, eyey-shinexy, shinesize, shinesize);
-    ellipse(10, 10, 10, 10);
+    //circle(eyex-shinexy, eyey-shinexy, shinesize);
+    circle(10, 10, 10);
 
     // eyelid
     if (random(1) > 0.5) {
@@ -207,7 +207,7 @@ class Aquatic {
     stroke(this.r/2, this.g/2, this.b/2, 80);
     ellipse(0, 0, this.s/random(1, 3), this.s/random(1, 3));
     fill(this.r/3, this.g/3, this.b/3, 120);
-    ellipse(0, 0, this.s/6, this.s/6);
+    circle(0, 0, this.s/6);
     rotate(-rot);
     translate(-xoff, -yoff);
 
@@ -240,7 +240,7 @@ class Aquatic {
       let freckx = i/this.s*150 * sin(i*15) + random(1, 10);
       let frecky = i/this.s*150 * cos(i*15) + random(1, 10);
       let dotsize = random(1, 10);
-      ellipse(freckx, frecky, dotsize, dotsize);
+      circle(freckx, frecky, dotsize);
     }
     // characters
     var chars = 's*.~_.)`:;*"-';
