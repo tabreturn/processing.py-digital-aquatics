@@ -14,6 +14,7 @@ function setup() {
   // remove bubble and bgcolor arguments for a transparent perimeter
   let aquatic = new Aquatic(width/2, height/2, random(80, 130), fillcolor,
                             true, "#D7E1FA");
+//background(fillcolor);
   aquatic.drawAquatic();
 }
 
@@ -72,7 +73,6 @@ class Aquatic {
     stroke(this.r/2, this.g/2, this.b/2);
     strokeWeight(1);
     arc(eyex, eyey, eyesize*2, eyesize*2, PI, TWO_PI, CHORD);
-    arc(1,1,1,1,1,1);
   }
 
   drawEyes(eyex, eyey, eyesize) {
@@ -82,7 +82,6 @@ class Aquatic {
     if (random(1) > 0.3) {
       strokeWeight(2.5);
       translate(eyex, eyey);
-      translate(10, 10);
       let rot = 0;
       let eyelashes = int(random(3, 8));
 
@@ -111,7 +110,7 @@ class Aquatic {
 
     // eyelid
     if (random(1) > 0.5) {
-      let cover = this.drawEyeLid(eyex, eyey, eyesize);
+      this.drawEyeLid(eyex, eyey, eyesize);
     }
   }
 
@@ -180,8 +179,6 @@ class Aquatic {
     let bn3 = 0.5 + random(0.5, -1.5);
     let ma = random(0.9, 1.1);
     let mb = random(0.9, 1.1);
-    let mm = 4 + random(20);
-    let mn3 = 0.81 + random(-0.8, 0.8);
     let mradius = this.s * random(0.2, 0.4);
     let mxoff = this.s / random(0.9, 1.1);
 
@@ -216,10 +213,10 @@ class Aquatic {
     noFill();
     stroke(255, 255, 255);
     strokeWeight(this.s/8);
+//stroke(self.r/2, self.g/2, self.b/2, 220)
+//strokeWeight(self.s/12)
+//fill(this.r, this.g, this.b, 120)
     beginShape();
-stroke(self.r/2, self.g/2, self.b/2, 220)
-strokeWeight(self.s/12)
-fill(this.r, this.g, this.b, 120)
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s-this.s/12, 0.5, TWO_PI-0.5,
                    0, 0, 1, true, "vertex");
     endShape();
@@ -228,7 +225,8 @@ fill(this.r, this.g, this.b, 120)
     stroke(this.r/2, this.g/2, this.b/2, 220);
     strokeWeight(this.s/12);
     beginShape();
-    this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5);
+    this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5,
+                    0, 0, 1, true, "vertex");
     // mouth
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI, 
                     mxoff, 0, 1.5, false, "vertex");
@@ -251,7 +249,6 @@ fill(this.r, this.g, this.b, 120)
       text(char, random(-play, play/2), random(-play*1.5, play*1.5));
     });
     // background-colored mask
-
     fill(this.bg);
     noStroke();
     beginShape();
@@ -266,7 +263,6 @@ fill(this.r, this.g, this.b, 120)
                     mxoff, 0, 1.5, false, "vertex");
     endContour();
     endShape(CLOSE);
-
     // lips
     noFill();
     stroke(this.r/2, this.g/2, this.b/2);
@@ -288,10 +284,9 @@ fill(this.r, this.g, this.b, 120)
     if (random(1) > 0.3) {
       this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0,
                       1, true, "hair");
-      rotate(-rot);
-      translate(-this.x, -this.y);
     }
-
+    rotate(-rot);
+    translate(-this.x, -this.y);
     // eye locations
     let eyex = this.x-this.s-random(this.s/10);
     let eyes = 3+int(random(10));
