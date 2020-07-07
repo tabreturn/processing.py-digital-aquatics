@@ -4,23 +4,34 @@
 /* jshint esversion: 6 */
 
 function setup() {
-  createCanvas(500, 500);
+  createCanvas(350, 350);
+  spawn();
+  fill(0);
+  textSize(16);
+  text("Press G to spawn a new amoeba", 15, height-45);
+  text("Press S to save it as an image", 15, height-20);
+}
 
+
+function spawn() {
+  background("#D7E1FA");
   let fillcolor = color(random(255),
                         random(255),
                         random(255),
                         random(128, 230));
-
   // remove bubble and bgcolor arguments for a transparent perimeter
-  let aquatic = new Aquatic(width/2, height/2, random(80, 130), fillcolor,
+  let aquatic = new Aquatic(width/2, height/2, random(70, 130), fillcolor,
                             true, "#D7E1FA");
-//background(fillcolor);
   aquatic.drawAquatic();
 }
 
 
 function keyPressed() {
-  if (key === "s") {
+  if (key === "g" || key === "G") {
+    spawn();
+  }
+
+  if (key === "s" || key === "S") {
     let timestamp = (`${hour()}-${minute()}-${second()}`);
     save(timestamp+".png");
   }
@@ -176,7 +187,7 @@ class Aquatic {
     let ba = random(0.7, 1.2);
     let bb = 1;
     let bm = int(random(1, 30));
-    let bn3 = 0.5 + random(0.5, -1.5);
+    let bn3 = 1 + random(-0.3, 0.3); // variation control
     let ma = random(0.9, 1.1);
     let mb = random(0.9, 1.1);
     let mradius = this.s * random(0.2, 0.4);
@@ -213,9 +224,6 @@ class Aquatic {
     noFill();
     stroke(255, 255, 255);
     strokeWeight(this.s/8);
-//stroke(self.r/2, self.g/2, self.b/2, 220)
-//strokeWeight(self.s/12)
-//fill(this.r, this.g, this.b, 120)
     beginShape();
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s-this.s/12, 0.5, TWO_PI-0.5,
                    0, 0, 1, true, "vertex");
@@ -228,7 +236,7 @@ class Aquatic {
     this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5,
                     0, 0, 1, true, "vertex");
     // mouth
-    this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI, 
+    this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                     mxoff, 0, 1.5, false, "vertex");
     endShape(CLOSE);
     // freckles
@@ -269,7 +277,7 @@ class Aquatic {
     strokeWeight(this.s/12);
     beginShape();
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
-                    mxoff, 0, 1.5, false, 'vertex');
+                    mxoff, 0, 1.5, false, "vertex");
     endShape();
     stroke((this.r + this.g) * 0.8,
            (this.g + this.b) * 0.8,
@@ -280,6 +288,7 @@ class Aquatic {
     this.superShape(bm, 0.98, 3, bn3, ma, mb, mradius, PI+HALF_PI, HALF_PI,
                     mxoff, 0, 1.5, false, "vertex");
     endShape();
+
     // hairs
     if (random(1) > 0.3) {
       this.superShape(bm, n1, n2, bn3, ba, bb, this.s, 0.5, TWO_PI-0.5, 0, 0,
