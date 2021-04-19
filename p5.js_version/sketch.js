@@ -15,9 +15,9 @@ function setup() {
 
 function spawn() {
   background("#D7E1FA");
-  let fillcolor = color(random(255),
-                        random(255),
-                        random(255),
+  let fillcolor = color(random(256),
+                        random(256),
+                        random(256),
                         random(128, 230));
   // remove bubble and bgcolor arguments for a transparent perimeter
   let aquatic = new Aquatic(width/2, height/2, random(70, 130), fillcolor,
